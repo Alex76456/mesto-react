@@ -1,3 +1,4 @@
+import React from 'react';
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -6,134 +7,190 @@ import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
 
 function App() {
+	const [ isEditProfilePopupOpen, setIsEditProfilePopupOpen ] = useState(false);
+	const [ isAddPlacePopupOpen, setIsAddPlacePopupOpen ] = useState(false);
+	const [ isEditAvatarPopupOpen, setIsEditAvatarPopupOpen ] = useState(false);
+	const [ isImagePopupOpen, setIsImagePopupOpen ] = useState(false);
+	const [ selectedCard, setSelectedCard ] = useState({});
 
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
-  const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
-  const [selectedCard, setSelectedCard] = useState({});
+	function handleEditProfileClick() {
+		setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
+	}
 
+	function handleAddPlaceClick() {
+		setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
+	}
 
-  function handleEditProfileClick() {
-    setIsEditProfilePopupOpen(!isEditProfilePopupOpen);
-    escListener(true);
-  }
+	function handleEditAvatarClick() {
+		setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
+	}
 
-  function handleAddPlaceClick() {
-    setIsAddPlacePopupOpen(!isAddPlacePopupOpen);
-    escListener(true);
-  }
+	function handleCardClick(choosenCard) {
+		setSelectedCard(choosenCard);
+		setIsImagePopupOpen(true);
+	}
 
-  function handleEditAvatarClick() {
-    setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
-    escListener(true);
-  }
+	function closeAllPopups() {
+		setIsEditProfilePopupOpen(false);
+		setIsAddPlacePopupOpen(false);
+		setIsEditAvatarPopupOpen(false);
+		setIsImagePopupOpen(false);
+		setSelectedCard({});
+	}
 
-  function handleCardClick(choosenCard) {
-    setSelectedCard(choosenCard);
-    setIsImagePopupOpen(true);
-    escListener(true);
-  }
+	function handleClick(e) {
+		if (e.target.classList.contains('popup')) {
+			closeAllPopups();
+		}
+	}
 
-  function closeAllPopups() {
-    setIsEditProfilePopupOpen(false);
-    setIsAddPlacePopupOpen(false);
-    setIsEditAvatarPopupOpen(false);
-    setIsImagePopupOpen(false);
-    setSelectedCard('');
-    escListener(false);
-  }
+	return (
+		<div className="root">
+			<div className="page">
+				<Header />
 
-  function onEscClosePopup(ev) {
-    if (ev.key === "Escape") {
-      setIsEditProfilePopupOpen(false);
-      setIsAddPlacePopupOpen(false);
-      setIsEditAvatarPopupOpen(false);
-      setIsImagePopupOpen(false);
-      setSelectedCard({});
-    }
-  }
+				<Main
+					onEditProfile={handleEditProfileClick}
+					onAddPlace={handleAddPlaceClick}
+					onEditAvatar={handleEditAvatarClick}
+					onCardClick={handleCardClick}
+				/>
 
-  function escListener(isOpen) {
-    if (isOpen === true) {
-      document.addEventListener('keydown', onEscClosePopup);
-    } else {
-      document.removeEventListener('keydown', onEscClosePopup);
-    }
-  }
+				<Footer />
 
+				<ImagePopup
+					card={selectedCard}
+					onClose={closeAllPopups}
+					isOpen={isImagePopupOpen}
+					onEscClose={handleClick}
+				/>
 
-  return (
-    <div className="root">
-      <div className="page">
-            <Header />
+				<PopupWithForm
+					name="edit"
+					title="Редактировать профиль"
+					isOpen={isEditProfilePopupOpen}
+					onClose={closeAllPopups}
+					onEscClose={handleClick}
+				>
+					<fieldset className="popup__form-set">
+						<label className="popup__form-field">
+							<input
+								className="popup__input popup__input_type_name"
+								type="text"
+								name="title"
+								id="name-input"
+								placeholder="Имя"
+								required
+								minLength="2"
+								maxLength="40"
+							/>
+							<span className="popup__input-error" id="name-input-error">
+								Вы пропустили это поле.
+							</span>
+						</label>
 
-            <Main 
-            onEditProfile={handleEditProfileClick} 
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            />
+						<label className="popup__form-field">
+							<input
+								className="popup__input popup__input_type_job"
+								type="text"
+								name="subtitle"
+								id="job-input"
+								placeholder="Профессия"
+								required
+								minLength="2"
+								maxLength="200"
+							/>
+							<span className="popup__input-error" id="job-input-error">
+								Вы пропустили это поле.
+							</span>
+						</label>
+						<button className="popup__submit" type="submit">
+							Сохранить
+						</button>
+					</fieldset>
+				</PopupWithForm>
 
-            <Footer />
+				<PopupWithForm
+					name="avatar"
+					title="Обновить аватар"
+					isOpen={isEditAvatarPopupOpen}
+					onClose={closeAllPopups}
+					onEscClose={handleClick}
+				>
+					<fieldset className="popup__form-set">
+						<label className="popup__form-field">
+							<input
+								className="popup__input popup__input_type_avatar-link"
+								type="url"
+								name="avatar-link"
+								id="url-avatar-input"
+								placeholder="Ссылка на картинку"
+								required
+							/>
+							<span className="popup__input-error" id="url-avatar-input-error">
+								Вы пропустили это поле.
+							</span>
+						</label>
 
-            <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
+						<button className="popup__submit" type="submit">
+							Сохранить
+						</button>
+					</fieldset>
+				</PopupWithForm>
 
-            <PopupWithForm name="edit" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} 
-            children={
-                <fieldset className="popup__form-set">
-                        <label className="popup__form-field">
-                            <input className="popup__input popup__input_type_name" type="text" name="title" id="name-input" placeholder="Имя" required minLength="2" maxLength="40" />
-                            <span className="popup__input-error" id="name-input-error">Вы пропустили это поле.</span>
-                        </label>
+				<PopupWithForm name="confirm" title="Вы уверены?" onClose={closeAllPopups} onEscClose={handleClick}>
+					<fieldset className="popup__form-set">
+						<button className="popup__submit" type="submit">
+							Да
+						</button>
+					</fieldset>
+				</PopupWithForm>
 
-                        <label className="popup__form-field">
-                            <input className="popup__input popup__input_type_job" type="text" name="subtitle" id="job-input" placeholder="Профессия" required minLength="2" maxLength="200" />
-                            <span className="popup__input-error" id="job-input-error">Вы пропустили это поле.</span>
-                        </label>
-                        <button className="popup__submit" type="submit">Сохранить</button>
-                        </fieldset>
-            }/>
+				<PopupWithForm
+					name="add"
+					title="Новое место"
+					isOpen={isAddPlacePopupOpen}
+					onClose={closeAllPopups}
+					onEscClose={handleClick}
+				>
+					<fieldset className="popup__form-set">
+						<label className="popup__form-field">
+							<input
+								className="popup__input popup__input_type_place"
+								type="text"
+								name="place"
+								id="place-input"
+								placeholder="Название"
+								required
+								minLength="2"
+								maxLength="30"
+							/>
+							<span className="popup__input-error" id="place-input-error">
+								Вы пропустили это поле.
+							</span>
+						</label>
 
-            <PopupWithForm name="avatar" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups}
-            children={
-                <fieldset className="popup__form-set">
-                        <label className="popup__form-field">
-                            <input className="popup__input popup__input_type_avatar-link" type="url" name="avatar-link" id="url-avatar-input" placeholder="Ссылка на картинку" required />
-                            <span className="popup__input-error" id="url-avatar-input-error">Вы пропустили это поле.</span>
-                        </label>
-
-                        <button className="popup__submit" type="submit">Сохранить</button>
-                        </fieldset>
-            }/>
-
-            <PopupWithForm name="confirm" title="Вы уверены?" onClose={closeAllPopups} 
-            children={
-                <fieldset className="popup__form-set">
-                        <button className="popup__submit" type="submit">Да</button>
-                </fieldset>
-            }/>
-
-            <PopupWithForm name="add" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} 
-            children={
-                <fieldset className="popup__form-set">
-                        <label className="popup__form-field">
-                            <input className="popup__input popup__input_type_place" type="text" name="place" id="place-input" placeholder="Название" required minLength="2" maxLength="30" />
-                            <span className="popup__input-error" id="place-input-error">Вы пропустили это поле.</span>
-                        </label>
-
-                        <label className="popup__form-field">
-                            <input className="popup__input popup__input_type_link" type="url" name="link" id="url-input" placeholder="Ссылка на картинку" required />
-                            <span className="popup__input-error" id="url-input-error">Вы пропустили это поле.</span>
-                        </label>
-                        <button className="popup__submit" type="submit">Создать</button>
-                </fieldset>
-            }/>
-
-      </div>
-
-    </div>
-  );
+						<label className="popup__form-field">
+							<input
+								className="popup__input popup__input_type_link"
+								type="url"
+								name="link"
+								id="url-input"
+								placeholder="Ссылка на картинку"
+								required
+							/>
+							<span className="popup__input-error" id="url-input-error">
+								Вы пропустили это поле.
+							</span>
+						</label>
+						<button className="popup__submit" type="submit">
+							Создать
+						</button>
+					</fieldset>
+				</PopupWithForm>
+			</div>
+		</div>
+	);
 }
 
 export default App;
