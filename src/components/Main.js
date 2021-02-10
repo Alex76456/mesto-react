@@ -4,65 +4,53 @@ import { useEffect } from 'react';
 import api from '../utils/api';
 import Card from './Card';
 
+function Main({ onEditProfile, onAddPlace, onEditAvatar, onCardClick }) {
+	const [ userName, setUserName ] = useState('');
+	const [ userDescription, setUserDescription ] = useState('');
+	const [ userAvatar, setUserAvatar ] = useState('');
 
+	const [ cards, setCards ] = useState([]);
 
+	useEffect(() => {
+		Promise.all([ api.getUser(), api.getInitialCards() ])
+			.then(([ userData, cardsData ]) => {
+				setUserName(userData.name);
+				setUserDescription(userData.about);
+				setUserAvatar(userData.avatar);
 
-function Main(props) {
+				setCards(cardsData);
+			})
+			.catch((err) => {
+				console.error(err);
+			});
+	}, []);
 
-  const [userName, setUserName] = useState('');
-  const [userDescription, setUserDescription] = useState('');
-  const [userAvatar, setUserAvatar] = useState('');
+	return (
+		<main>
+			<section className="profile">
+				<div className="profile__avatar-container" onClick={onEditAvatar}>
+					<img className="profile__avatar" src={userAvatar} alt="аватар" />
+				</div>
 
-  const [cards, setCards] = useState([]);
+				<div className="profile__info">
+					<h1 className="profile__title">{userName}</h1>
 
-  useEffect(() => {
-    Promise.all([api.getUser(), api.getInitialCards()])
-      .then((res) => {
+					<button className="profile__edit-button" type="button" onClick={onEditProfile} />
 
-        setUserName(res[0].name);
-        setUserDescription(res[0].about);
-        setUserAvatar(res[0].avatar);
+					<p className="profile__subtitle">{userDescription}</p>
+				</div>
+				<button className="profile__add-button" type="button" onClick={onAddPlace} />
+			</section>
 
-        setCards(res[1]);
-
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
-
-  const InitionalCardList = cards.map((initionalCard) =>
-    <Card card={initionalCard} onCardClick={props.onCardClick} key={initionalCard._id}/>
-  );
-
-
-  return (
-    <main>
-              <section className="profile">
-                <div className="profile__avatar-container" onClick={props.onEditAvatar}>
-                  <img className="profile__avatar" src={userAvatar} alt="аватар" />
-                </div>
-
-                <div className="profile__info">
-                  <h1 className="profile__title">{userName}</h1>
-
-                  <button className="profile__edit-button" type="button" onClick={props.onEditProfile}></button>
-
-                  <p className="profile__subtitle">{userDescription}</p>
-                </div>
-                <button className="profile__add-button" type="button" onClick={props.onAddPlace}></button>
-              </section>
-
-              <section className="elements">
-                <ul className="elements__list">
-
-                    {InitionalCardList}
-
-                </ul>
-              </section>
-
-            </main>
-  )
+			<section className="elements">
+				<ul className="elements__list">
+					{cards.map((initionalCard) => {
+						return (<Card card={initionalCard} onCardClick={onCardClick} key={initionalCard._id} />)
+					})}
+				</ul>
+			</section>
+		</main>
+	);
 }
 
 export default Main;

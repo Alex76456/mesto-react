@@ -1,26 +1,35 @@
 import React from 'react';
+import { useEffect } from 'react';
 
-function PopupWithForm(props) {
+function PopupWithForm({ name, title, isOpen, onClose, onEscClose, children }) {
+	useEffect(
+		() => {
+			if (!isOpen) return;
+			const handleEscapeClose = (event) => {
+				if (event.key === 'Escape') {
+					onClose();
+				}
+			};
+			document.addEventListener('keydown', handleEscapeClose);
+			return () => {
+				document.removeEventListener('keydown', handleEscapeClose);
+			};
+		},
+		[ isOpen, onClose ]
+	);
 
+	return (
+		<div className={`popup popup_type_${name} ${isOpen && 'popup_opened'}`} onClick={onEscClose}>
+			<div className="popup__content">
+				<button type="button" className={`popup__close popup__close_place_${name}`} onClick={onClose} />
+				<h2 className="popup__title">{`${title}`}</h2>
 
-  return (
-    <div className={`popup popup_type_${props.name} ${props.isOpen ? 'popup_opened' : ''}`} onClick={(e)=>{if(e.target.classList.contains('popup')){props.onClose()}}}>
-        <div className="popup__content">
-                <button type="button" className={`popup__close popup__close_place_${props.name}`} onClick={props.onClose}></button>
-                <h2 className="popup__title">
-                        {`${props.title}`}
-                </h2>
-
-                <form className="popup__form" name={`${props.name}-form`} noValidate>
-                    <fieldset className="popup__form-set">
-                        {props.children}
-                     </fieldset>
-                </form>
-        </div>
-                    
-    </div>
-
-  )
+				<form className="popup__form" name={`${name}-form`} noValidate>
+					<fieldset className="popup__form-set">{children}</fieldset>
+				</form>
+			</div>
+		</div>
+	);
 }
 
 export default PopupWithForm;
