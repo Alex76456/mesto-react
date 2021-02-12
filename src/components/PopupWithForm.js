@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 
-function PopupWithForm({ name, title, isOpen, onClose, onEscClose, children }) {
+function PopupWithForm({ name, title, isOpen, onClose, onEscClose, children, onSubmit }) {
 	useEffect(
 		() => {
 			if (!isOpen) return;
@@ -24,7 +24,7 @@ function PopupWithForm({ name, title, isOpen, onClose, onEscClose, children }) {
 				<button type="button" className={`popup__close popup__close_place_${name}`} onClick={onClose} />
 				<h2 className="popup__title">{`${title}`}</h2>
 
-				<form className="popup__form" name={`${name}-form`} noValidate>
+				<form className="popup__form" name={`${name}-form`} onSubmit={onSubmit} noValidate>
 					<fieldset className="popup__form-set">{children}</fieldset>
 				</form>
 			</div>

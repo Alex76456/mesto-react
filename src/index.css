@@ -22,6 +22,7 @@
 @import url('./blocks/elements/__likes-number/elements__likes-number.css');
 @import url('./blocks/elements/__caption-like/elements__caption-like.css');
 @import url('./blocks/elements/__delete-button/elements__delete-button.css');
+@import url('./blocks/elements/__delete-button/_hidden/elements__delete-button_hidden.css');
 @import url('./blocks/elements/__caption-like/_color/elements__caption-like_color_black.css');
 @import url('./blocks/footer/footer.css');
 @import url('./blocks/footer/__copyright/footer__copyright.css');
@@ -34,15 +35,19 @@
 @import url('./blocks/popup/__title/popup__title.css');
 @import url('./blocks/popup/__form/popup__form.css');
 @import url('./blocks/popup/__input/popup__input.css');
+
 @import url('./blocks/popup/__input/_type/popup__input_type_error.css');
-@import url('./blocks/popup/__submit/popup__submit.css');
+
 @import url('./blocks/popup/__submit/_disabled/popup__submit_disabled.css');
+
+@import url('./blocks/popup/__submit/popup__submit.css');
 @import url('./blocks/popup/__image-container/popup__image-container.css');
 @import url('./blocks/popup/__image/popup__image.css');
 @import url('./blocks/popup/__image-caption/popup__image-caption.css');
 @import url('./blocks/popup/__form-set/popup__form-set.css');
 @import url('./blocks/popup/__form-field/popup__form-field.css');
 @import url('./blocks/popup/__input-error/popup__input-error.css');
+
 @import url('./blocks/popup/__input-error/_visibile/popup__input-error_visible.css');
 
 /*
@@ -53,7 +58,6 @@
 @import url('../blocks');
 @import url('../blocks');
 */
-
 
 /*
 * {
