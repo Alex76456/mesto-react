@@ -2,7 +2,8 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm';
 
 function EditAvatarPopup({ isOpen, onClose, onEscClose, onUpdateAvatar }) {
-	const avatarRef = React.useRef();
+	const [ avatar, setAvatar ] = React.useState('');
+
 	const [ buttonSubmitText, setButtonSubmitText ] = React.useState('Сохранить');
 	const [ inputErrorText, setInputErrorText ] = React.useState('Вы пропустили это поле.');
 
@@ -16,13 +17,13 @@ function EditAvatarPopup({ isOpen, onClose, onEscClose, onUpdateAvatar }) {
 	function handleSubmit(e) {
 		e.preventDefault();
 		setButtonSubmitText('Сохранение...');
-		onUpdateAvatar({ avatar: avatarRef.current.value });
+		onUpdateAvatar({ avatar: avatar });
 	}
 
 	React.useEffect(
 		() => {
 			if (isOpen === false) {
-				avatarRef.current.value = '';
+				setAvatar('');
 				setButtonSubmitText('Сохранить');
 				setInputValid(true);
 				setFormValid(false);
@@ -31,10 +32,13 @@ function EditAvatarPopup({ isOpen, onClose, onEscClose, onUpdateAvatar }) {
 		[ isOpen ]
 	);
 
-	function handleValidation() {
-		setFormValid(avatarRef.current.validity.valid);
-		setInputValid(avatarRef.current.validity.valid);
-		setInputErrorText(avatarRef.current.validationMessage);
+	function handleValidation(e) {
+		setAvatar(e.target.value);
+
+		setInputValid(e.target.validity.valid);
+		setInputErrorText(e.target.validationMessage);
+
+		setFormValid(e.target.validity.valid);
 	}
 
 	return (
@@ -55,7 +59,7 @@ function EditAvatarPopup({ isOpen, onClose, onEscClose, onUpdateAvatar }) {
 						id="url-avatar-input"
 						placeholder="Ссылка на картинку"
 						required
-						ref={avatarRef}
+						value={avatar}
 						onChange={handleValidation}
 					/>
 					<span className={inputErrorClassName} id="url-avatar-input-error">
